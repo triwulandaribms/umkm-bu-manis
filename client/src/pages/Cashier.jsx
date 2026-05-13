@@ -75,7 +75,7 @@ export default function Cashier() {
           <div className="flex justify-between px-5 mb-5 gap-3">
             <button
               onClick={() => {
-                api.delete("/cashier/delete-all").then(() => {
+                api.delete("/user/delete-all").then(() => {
                   window.location.reload();
                 });
               }}
@@ -112,7 +112,7 @@ export default function Cashier() {
                   address: "-",
                 });
                 api
-                  .post("/sale/add", saleCustomer)
+                  .post("/user/add-sale", saleCustomer)
                   .then((res) => alert(res.msg));
                 api.delete("/cashier/delete-all");
                 setSaleCustomer({});

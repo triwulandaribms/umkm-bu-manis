@@ -77,7 +77,7 @@ export default function ProductAdmin() {
                         `Apakah anda yakin ingin menghapus produk ${p.name}`
                       )
                     ) {
-                      api.delete(`/product/delete/${p.id}`).catch((e) => {
+                      api.delete(`/user/delete-product-by/${p.id}`).catch((e) => {
                         console.log(e);
                       });
                       window.location.href = "/admin/product";
@@ -105,7 +105,7 @@ export default function ProductAdmin() {
                 e.preventDefault();
                 if (editedProduct.id) {
                   api
-                    .put(`/product/update/${editedProduct.id}`, editedProduct)
+                    .put(`/user/update-product-by/${editedProduct.id}`, editedProduct)
                     .then(async (res) => {
                       alert(res.msg);
                       window.location.href = "/admin/product";
@@ -115,7 +115,7 @@ export default function ProductAdmin() {
                     });
                 } else {
                   api
-                    .post("/product/add", editedProduct)
+                    .post("/user/add-product", editedProduct)
                     .then(async (res) => {
                       alert(res.msg);
                       window.location.href = "/admin/product";

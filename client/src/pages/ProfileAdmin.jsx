@@ -72,7 +72,7 @@ export default function ProfileAdmin() {
           <button
             onClick={() => {
               if (confirm("Apakah yakin anda akan logout")) {
-                api.get("/auth/logout").then((res) => {
+                api.get("/user/auth/logout").then((res) => {
                   localStorage.clear();
                   alert(res.msg);
                   window.location.href = "/login";

@@ -121,7 +121,7 @@ export default function ProfileCustomer() {
           <button
             onClick={() => {
               if (confirm("Apakah yakin anda akan logout ?")) {
-                api.get("/auth/logout").then(() => {
+                api.get("/customer/auth/logout-customer").then(() => {
                   localStorage.clear();
                   window.location.href = "/login";
                 });

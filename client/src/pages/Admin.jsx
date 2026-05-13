@@ -25,13 +25,13 @@ export default function Admin() {
 
   useEffect(() => {
     setTimeout(() => {
-      api.get("/product/get-all").then((res) => setProducts(res));
-      api.get("/admin/get-all-user").then((res) => setUser(res));
-      api.get("/customer/get-all-customer").then((res) => setCustomer(res));
-      api.get("/sale/get-sales-report").then((res) => setSalesReport(res));
-      api.get("/sale/get-best-product").then((res) => setBestProducts(res));
-      api.get("/sale/get-best-customer").then((res) => setBestCustomers(res));
-      api.get("/cashier/get-all").then((res) => setCashier(res));
+      api.get("/user/get-all").then((res) => setProducts(res));
+      api.get("/user/auth/get-all-user").then((res) => setUser(res));
+      api.get("/user/auth/get-all-customer").then((res) => setCustomer(res));
+      api.get("/user/get-sales-report").then((res) => setSalesReport(res));
+      api.get("/user/get-best-product").then((res) => setBestProducts(res));
+      api.get("/user/get-best-customer").then((res) => setBestCustomers(res));
+      api.get("/user/get-all-cashier").then((res) => setCashier(res));
       setLoading(false);
     }, 500);
   }, [products?.id]);

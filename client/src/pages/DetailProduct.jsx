@@ -81,7 +81,7 @@ export default function DetailProduct() {
                 <button
                   onClick={() => {
                     if (localStorage.getItem("id")) {
-                      api.post("/cart/add", cartProduct).then((res) => {
+                      api.post("/customer/add-cart", cartProduct).then((res) => {
                         alert(res.msg);
                         window.location.href = "/cart";
                       });

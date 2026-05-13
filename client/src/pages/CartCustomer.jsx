@@ -379,12 +379,12 @@ export default function CartCustomer() {
                           type_of_payment: selectPayment,
                           address: `${address}.`,
                         });
-                        api.post("/sale/add", saleCustomer).then((res) => {
+                        api.post("/user/add-sale", saleCustomer).then((res) => {
                           alert(res.msg);
                         });
                         if (saleCustomer.discount) {
                           api.delete(
-                            `/code/delete/${localStorage.getItem("id_code")}`
+                            `/user/delete/${localStorage.getItem("id_code")}`
                           );
                         }
                         window.location.href = "/profile";

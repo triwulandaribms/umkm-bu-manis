@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
 
     api
-      .get("/product/get-all")
+      .get("/customer/get-all-product")
       .then((response) => setProducts(response.data));
   
     const id = localStorage.getItem("id");
@@ -29,15 +29,15 @@ function App() {
     if (id) {
   
       api
-        .get(`/cart/get/${id}`)
+        .get(`/customer/get-cart-by/${id}`)
         .then((response) => setCart(response.data));
   
       api
-        .get(`/code/get/${id}`)
+        .get(`/customer/get-voucher-by/${id}`)
         .then((response) => setCodeVouchers(response.data));
   
       api
-        .get(`/sale/get/${id}`)
+        .get(`/customer/get-sale-by/${id}`)
         .then((response) => setSales(response.data));
   
     }

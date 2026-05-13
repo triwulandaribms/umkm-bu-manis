@@ -5,7 +5,11 @@ const cookieParser = require("cookie-parser");
 
 const { sequelize } = require("./config/db");
 
-require("./models/Relasi");
+require("./models/Relasi.js");
+
+
+const UserAuthRoute = require("./routes/user/user-auth-route.js");
+const UserRoute = require("./routes/user/user-route.js");
 
 const CustomerAuthRoute = require("./routes/customer/customer-auth-route.js");
 const CustomerRoute = require("./routes/customer/customer-route.js");
@@ -24,8 +28,8 @@ app.use(cookieParser());
 const router = express.Router();
 app.use("/api", router);
 
-router.use("/user/auth",CustomerAuthRoute);
-router.use("/user", CustomerRoute);
+router.use("/user/auth",UserAuthRoute);
+router.use("/user", UserRoute);
 
 router.use("/customer-auth", CustomerAuthRoute);
 router.use("/customer", CustomerRoute);

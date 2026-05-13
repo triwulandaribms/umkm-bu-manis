@@ -103,7 +103,7 @@ export default function CustUserAdmin() {
                             )
                           ) {
                             api
-                              .delete(`/auth/delete-user/${u.id}`)
+                              .delete(`/user/auth/delete-user/${u.id}`)
                               .then(async (res) => {
                                 alert(res.msg);
                               })
@@ -193,7 +193,7 @@ export default function CustUserAdmin() {
                           )
                         ) {
                           api
-                            .delete(`/customer/delete-customer/${c.id}`)
+                            .delete(`/user/auth/delete-customer/${c.id}`)
                             .then(async (res) => {
                               alert(res.msg);
                             })
@@ -228,7 +228,7 @@ export default function CustUserAdmin() {
                 if (editedCustomer.id) {
                   api
                     .put(
-                      `/customer/update-customer/${editedCustomer.id}`,
+                      `/user/auth/update-customer/${editedCustomer.id}`,
                       editedCustomer
                     )
                     .then(async (res) => {
@@ -240,7 +240,7 @@ export default function CustUserAdmin() {
                     });
                 } else {
                   api
-                    .post("/customer/add-account-customer", editedCustomer)
+                    .post("/user/auth/register-customer", editedCustomer)
                     .then(async (res) => {
                       alert(res.msg);
                       window.location.href = "/admin/customer-user";
@@ -345,7 +345,7 @@ export default function CustUserAdmin() {
                 e.preventDefault();
                 if (editedUser.id) {
                   api
-                    .put(`/auth/update-user/${editedUser.id}`, editedUser)
+                    .put(`/user/auth/update-user/${editedUser.id}`, editedUser)
                     .then(async (res) => {
                       alert(res.msg);
                       window.location.href = "/admin/customer-user";
@@ -355,7 +355,7 @@ export default function CustUserAdmin() {
                     });
                 } else {
                   api
-                    .post("/auth/add-account-user", editedUser)
+                    .post("/user/auth/register-admin", editedUser)
                     .then(async (res) => {
                       alert(res.msg);
                       window.location.href = "/admin/customer-user";

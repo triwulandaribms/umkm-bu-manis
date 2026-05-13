@@ -41,19 +41,19 @@ router.delete("/delete-product-by/:id", deleteProduct);
 router.get("/get-sales-report", getSalesReport);
 router.get("/get-best-product", getBestProduct);
 router.get("/get-best-customer", getBestCustomer);
-router.post("/add", addSalesCustomer);
-router.get("/get/:id", getSaleByIdCustomer);
+router.post("/add-sale", addSalesCustomer);
+router.get("/get-sale-by/:id", getSaleByIdCustomer);
   
   
 // route untuk aktivitas kasir
-router.get("/get-all", getAllProductCashier);
-router.post("/add", addCashierProduct);
+router.get("/get-all-cashier", getAllProductCashier);
+router.post("/add-cashier", addCashierProduct);
 router.delete("/delete/:id", deleteProductCashier);
 router.delete("/delete-all", deleteAllProductCashier);
 
 
 // route untuk voucher
-router.get("/get/:id", getCodeVoucher); 
+router.get("/get-voucher-by/:id", getCodeVoucher); 
 router.delete("/delete/:id", deleteCodeVoucher); 
 
 

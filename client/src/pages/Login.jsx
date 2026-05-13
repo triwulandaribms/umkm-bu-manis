@@ -43,7 +43,7 @@ export default function Login() {
 
       if (isCustomerLogin) {
 
-        const res = await api.post("/customer/login-customer",loginCustomer);
+        const res = await api.post("/customer/auth/login-customer",loginCustomer);
             
         const token = res.token;
             
@@ -68,7 +68,7 @@ export default function Login() {
       } else {
 
         const res = await api.post(
-          "/admin/login-admin",
+          "/user/auth/login-admin",
           loginAdmin
         );
         

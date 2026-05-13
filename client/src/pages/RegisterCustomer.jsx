@@ -27,7 +27,7 @@ export default function Register() {
     try {
   
       const res = await api.post(
-        "/customer/register-customer",
+        "/customer/auth/register-customer",
         {
           name: register.name,
           password: register.password,
