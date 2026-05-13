@@ -1,5 +1,5 @@
-const CashierProduct = require("../models/CashierProduct.js");
-const Product = require("../models/Product.js");
+const CashierProduct = require("../../models/CashierProduct.js");
+const Product = require("../../models/Product.js");
 
 exports.addCashierProduct = async (req, res) => {
     

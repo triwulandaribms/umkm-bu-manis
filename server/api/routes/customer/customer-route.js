@@ -1,14 +1,24 @@
-const express= require("express");
+const express = require( "express");
 const {
-  registerAccountCustomer,
-  loginAccountCustomer,
-  logoutAccountCustomer,
-} = require("../../controllers/customer/customer-auth-controller.js");
+  getCartByIdCustomer,
+  addCart,
+  updateCart,
+  deleteCart,
+} = require( "../../controllers/cart/CartController.js");
+
+const {
+    getAllProduct
+} = require("../../controllers/product/ProductController.js");
 
 const router = express.Router();
 
-router.post("/register-customer", registerAccountCustomer);
-router.post("/login-customer", loginAccountCustomer);
-router.get("/logout-customer", logoutAccountCustomer);
+// route untuk melihat produk
+router.get("/get-all-product", getAllProduct);
+
+// route untuk aktivitas belanja 
+router.get("/get-cart-by/:id", getCartByIdCustomer); 
+router.post("/add-cart", addCart); 
+router.put("/update-cart-by/:id", updateCart); 
+router.delete("/delete-cart-by/:id", deleteCart);
 
 module.exports = router;

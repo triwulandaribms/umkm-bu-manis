@@ -1,4 +1,4 @@
-const  CodeVoucher  = require("../models/CodeVoucher.js");
+const  CodeVoucher  = require("../../models/CodeVoucher.js");
 
  exports.getCodeVoucher = async (req, res) => {
   try {
