@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-const { sequelize } = require("./config/db");
+const { sequelize } = require("./config/db.js");
 
 require("./models/Relasi.js");
 
@@ -31,7 +31,7 @@ app.use("/api", router);
 router.use("/user/auth",UserAuthRoute);
 router.use("/user", UserRoute);
 
-router.use("/customer-auth", CustomerAuthRoute);
+router.use("/customer/auth", CustomerAuthRoute);
 router.use("/customer", CustomerRoute);
 
 

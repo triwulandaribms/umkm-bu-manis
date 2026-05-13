@@ -41,7 +41,7 @@ exports.registerAccountCustomer = async (req, res) => {
     res.status(201).json({
       message: "Registrasi akun telah berhasil",
       data: {
-        id: resultData.id,
+        id_customer: resultData.id_customer,
         name: resultData.name,
         customer_code: resultData.customer_code
       }
@@ -129,29 +129,22 @@ exports.logoutAccountCustomer = async (_req, res) => {
 
 };
 
- exports.getAllCustomer = async (_req, res) => {
-
+exports.getAllCustomer = async (_req, res) => {
   try {
-    
     const dataCustomer = await Customer.findAll({
-      where:{
-        deletedAt: null
-      }
+      where: {
+        deletedAt: null,
+      },
     });
 
-    if(!dataCustomer){
-      return res.status(404).json({ 
-        message: "Customer tidak ditemukan"
-      });
-    }
-
-    res.status(200).json({
-       data: dataCustomer
-    });
+    res.status(200).json(dataCustomer);
 
   } catch (error) {
     console.error("Gagal menampilkan:", error.message);
-    res.status(500).json({ message: "Terjadi kesalahan server" });
+
+    res.status(500).json({
+      message: "Terjadi kesalahan server",
+    });
   }
 };
 

@@ -108,6 +108,7 @@ exports.loginAccountAdmin = async (req, res) => {
     const token = jwt.sign(
       {
         id: resultData.id,
+        name: resultData.name,
         username: resultData.username,
         role: resultData.role
       },

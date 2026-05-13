@@ -56,10 +56,7 @@ export default function Login() {
         const payload = jwtDecode(token);
       
         localStorage.setItem("id", payload.id);
-        localStorage.setItem(
-          "customer_code",
-          payload.customer_code
-        );
+        localStorage.setItem("customer_code",payload.customer_code);
         localStorage.setItem("name", payload.name);
       
         window.location.href = "/";
@@ -87,10 +84,8 @@ export default function Login() {
         const payload = jwtDecode(token);
         
         localStorage.setItem("id", payload.id);
-        localStorage.setItem(
-          "username",
-          payload.username
-        );
+        localStorage.setItem("name", payload.name);
+        localStorage.setItem("username",payload.username);
         localStorage.setItem("role", payload.role);
         
         window.location.href = "/admin";

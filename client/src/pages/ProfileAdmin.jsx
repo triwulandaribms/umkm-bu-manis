@@ -74,7 +74,6 @@ export default function ProfileAdmin() {
               if (confirm("Apakah yakin anda akan logout")) {
                 api.get("/user/auth/logout").then((res) => {
                   localStorage.clear();
-                  alert(res.msg);
                   window.location.href = "/login";
                 });
               }
