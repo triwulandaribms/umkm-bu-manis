@@ -121,97 +121,105 @@ exports.loginAccountCustomer = async (req, res) => {
   }
 };
 
- exports.getAllCustomer = async (_req, res) => {
+exports.logoutAccountCustomer = async (_req, res) => {
 
-  try {
-    
-    const dataCustomer = await Customer.findAll({
-      where:{
-        deletedAt: null
-      }
-    });
+  res.setHeader("Cache-Control", "no-store");
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logout berhasil" });
 
-    if(!dataCustomer){
-      return res.status(404).json({ 
-        message: "Customer tidak ditemukan"
-      });
-    }
-
-    res.status(200).json({
-       data: dataCustomer
-    });
-
-  } catch (error) {
-    console.error("Gagal menampilkan:", error.message);
-    res.status(500).json({ message: "Terjadi kesalahan server" });
-  }
 };
 
- exports.updateAccountCustomer = async (req, res) => {
+//  exports.getAllCustomer = async (_req, res) => {
 
-   try {
+//   try {
+    
+//     const dataCustomer = await Customer.findAll({
+//       where:{
+//         deletedAt: null
+//       }
+//     });
 
-    const { name } = req.body;
+//     if(!dataCustomer){
+//       return res.status(404).json({ 
+//         message: "Customer tidak ditemukan"
+//       });
+//     }
+
+//     res.status(200).json({
+//        data: dataCustomer
+//     });
+
+//   } catch (error) {
+//     console.error("Gagal menampilkan:", error.message);
+//     res.status(500).json({ message: "Terjadi kesalahan server" });
+//   }
+// };
+
+//  exports.updateAccountCustomer = async (req, res) => {
+
+//    try {
+
+//     const { name } = req.body;
   
-    const cekDataCustomer = await Customer.findOne({
-      where:{
-        id:req.params.id,
-        deletedAt: null
-      }
-    });
+//     const cekDataCustomer = await Customer.findOne({
+//       where:{
+//         id:req.params.id,
+//         deletedAt: null
+//       }
+//     });
 
-    if(!cekDataCustomer){
-      return res.status(404).json({
-        message: "Customer tidak ditemukan atau sudah dihapus"
-      });
-    }
+//     if(!cekDataCustomer){
+//       return res.status(404).json({
+//         message: "Customer tidak ditemukan atau sudah dihapus"
+//       });
+//     }
 
-    await cekDataCustomer.update({
-      name
-    });
+//     await cekDataCustomer.update({
+//       name
+//     });
 
-    res.status(201).json({
-      message: "berhasil update"
-    });
+//     res.status(201).json({
+//       message: "berhasil update"
+//     });
 
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Terjadi kesalahan server" });
-  }
-};
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Terjadi kesalahan server" });
+//   }
+// };
 
- exports.deleteAccountCustomer = async (req, res) => {
+//  exports.deleteAccountCustomer = async (req, res) => {
 
-  try {
+//   try {
     
-    const { id } = req.query;
+//     const { id } = req.query;
     
-    if(!id){
-      return res.status(400).json({
-        message: "ID harus diisi."
-      });
-    }
+//     if(!id){
+//       return res.status(400).json({
+//         message: "ID harus diisi."
+//       });
+//     }
 
-    const resultData = await Customer.findOne({
-      where:{
-        id,
-        deletedAt: null
-      }
-    });
+//     const resultData = await Customer.findOne({
+//       where:{
+//         id,
+//         deletedAt: null
+//       }
+//     });
 
-    if(!resultData){
-      res.status(201).json({
-        message: `data berhasil dihapus`    
-      });  
-    }
+//     if(!resultData){
+//       res.status(201).json({
+//         message: `data berhasil dihapus`    
+//       });  
+//     }
 
-    await resultData.update({
-      deletedAt: new Date()
-    });
+//     await resultData.update({
+//       deletedAt: new Date()
+//     });
 
-  } catch (error) {
-    console.error("Gagal:", error.message);
-    res.status(500).json({ message: "Terjadi kesalahan server"});
-  }
-};
+//   } catch (error) {
+//     console.error("Gagal:", error.message);
+//     res.status(500).json({ message: "Terjadi kesalahan server"});
+//   }
+// };
 

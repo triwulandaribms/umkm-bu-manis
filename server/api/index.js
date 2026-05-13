@@ -2,18 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+
 const { sequelize } = require("./config/db");
 
 require("./models/Relasi");
 
-
-const ProductRoute = require("./routes/ProductRoute");
-const AdminRoute = require("./routes/AdminRoute");
-const CartRoute = require("./routes/CartRoute");
-const CodeVoucherRoute = require("./routes/CodeVoucherRoute");
-const SaleRoute = require("./routes/SaleRoute");
-const CustomerRoute = require("./routes/CustomerRoute");
-const CashierRoute = require("./routes/CashierRoute");
+const CustomerAuthRoute = require("./routes/customer/customer-auth-route.js");
+const CustomerRoute = require("./routes/customer/customer-route.js");
 
 const app = express();
 
@@ -25,13 +20,16 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/admin", AdminRoute);
-app.use("/api/customer", CustomerRoute);
-app.use("/api/product", ProductRoute);
-app.use("/api/sale", SaleRoute);
-app.use("/api/cashier", CashierRoute);
-app.use("/api/cart", CartRoute);
-app.use("/api/code", CodeVoucherRoute);
+
+const router = express.Router();
+app.use("/api", router);
+
+router.use("/user/auth",CustomerAuthRoute);
+router.use("/user", CustomerRoute);
+
+router.use("/customer-auth", require("./routes/ProductRoute"));
+router.use("/customer", require("./routes/SaleRoute"));
+
 
 (async () => {
   try {
@@ -41,9 +39,10 @@ app.use("/api/code", CodeVoucherRoute);
     await sequelize.sync({ alter: true });
     console.log("Sinkronisasi database berhasil");
 
-    app.listen(process.env.API_PORT, () =>
-      console.log("Server berhasil dijalankan")
-    );
+    app.listen(process.env.API_PORT, () => {
+      console.log(`Server berjalan di port ${process.env.API_PORT}`);
+    });
+
   } catch (err) {
     console.error("Error database:", err.message);
   }
