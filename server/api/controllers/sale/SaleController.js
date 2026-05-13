@@ -1,10 +1,10 @@
 const { sequelize } = require("../config/db");
 const { Op, fn, col, literal } = require("sequelize");
-const Sales = require("../models/Sales");
-const Product = require("../models/Product");
-const Customer = require("../models/Customer");
-const Cart = require("../models/Cart");
-const VoucherCode = require("../models/CodeVoucher");
+const Sales = require("../../models/Sales");
+const Product = require("../../models/Product");
+const Customer = require("../../models/Customer");
+const Cart = require("../../models/Cart");
+const VoucherCode = require("../../models/CodeVoucher");
 
 exports.addSalesCustomer = async (req, res) => {
   const {

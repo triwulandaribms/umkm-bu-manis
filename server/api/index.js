@@ -27,8 +27,8 @@ app.use("/api", router);
 router.use("/user/auth",CustomerAuthRoute);
 router.use("/user", CustomerRoute);
 
-router.use("/customer-auth", require("./routes/ProductRoute"));
-router.use("/customer", require("./routes/SaleRoute"));
+router.use("/customer-auth", CustomerAuthRoute);
+router.use("/customer", CustomerRoute);
 
 
 (async () => {

@@ -7,13 +7,14 @@ const {
   logoutAccount,
   updateAccountUser,
   getAllUser,
-} = require("../controllers/AdminController.js");
+} = require("../../controllers/user/user-auth-controller.js");
+
 const {
   getAllCustomer,
   registerAccountCustomer,
   updateAccountCustomer,
   deleteAccountCustomer
-} = require("../controllers/CustomerController.js");
+} = require("../../controllers/customer/customer-auth-controller.js");
 
 const router = express.Router();
 

@@ -1,6 +1,6 @@
 const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../../models/User");
 const { Op } = require("sequelize");
 
 
