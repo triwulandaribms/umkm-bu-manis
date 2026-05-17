@@ -25,11 +25,11 @@ router.get("/logout", logoutAccount);
 router.get("/get-all-customer", getAllCustomer);
 router.post("/register-customer", registerAccountCustomer);
 router.put("/update-customer/:id", updateAccountCustomer);
-router.delete("/delete-customer", deleteAccountCustomer);
+router.delete("/delete-customer/:id", deleteAccountCustomer);
 
 router.get("/my-account", getCurrentUser);
 router.get("/get-all-user", getAllUser);
 router.put("/update-user/:id", updateAccountUser);
-router.delete("/delete-user", deleteAccountUser);
+router.delete("/delete-user/:id", deleteAccountUser);
 
 module.exports = router;
