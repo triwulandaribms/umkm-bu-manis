@@ -21,8 +21,7 @@ export default function CustUserAdmin() {
   } = useContext(AdminContext);
 
   useEffect(() => {
-    const randomCode = Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit random number
-    // setCustomerCode(`CS${randomCode}`);
+    const randomCode = Math.floor(1000 + Math.random() * 9000); 
     setEditedCustomer({
       ...editedCustomer,
       customer_code: `CS${randomCode}`,
@@ -132,8 +131,7 @@ export default function CustUserAdmin() {
             <div>
               <button
                 onClick={() => {
-                  const randomCode = Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit random number
-                  // setCustomerCode(`CS${randomCode}`);
+                  const randomCode = Math.floor(1000 + Math.random() * 9000);
                   setEditedCustomer({
                     ...editedCustomer,
                     customer_code: `CS${randomCode}`,
@@ -146,7 +144,6 @@ export default function CustUserAdmin() {
               </button>
             </div>
           </div>
-          {/* Table for CRUD Data */}
           <table className="w-full border-collapse border-2 border-teal">
             <thead>
               <tr>
@@ -158,7 +155,6 @@ export default function CustUserAdmin() {
               </tr>
             </thead>
             <tbody>
-              {/* Data rows */}
               {customer?.map((c, index) => (
                 <tr key={c.id}>
                   <td className="border-2 border-teal px-4 py-2 text-center">
@@ -195,7 +191,7 @@ export default function CustUserAdmin() {
                           api
                             .delete(`/user/auth/delete-customer/${c.id}`)
                             .then(async (res) => {
-                              alert(res.msg);
+                              alert(res.message);
                             })
                             .catch((e) => {
                               console.log(e);
@@ -232,7 +228,7 @@ export default function CustUserAdmin() {
                       editedCustomer
                     )
                     .then(async (res) => {
-                      alert(res.msg);
+                      alert(res.message);
                       window.location.href = "/admin/customer-user";
                     })
                     .catch((e) => {
@@ -242,7 +238,7 @@ export default function CustUserAdmin() {
                   api
                     .post("/user/auth/register-customer", editedCustomer)
                     .then(async (res) => {
-                      alert(res.msg);
+                      alert(res.message);
                       window.location.href = "/admin/customer-user";
                     })
                     .catch((e) => {
@@ -264,7 +260,7 @@ export default function CustUserAdmin() {
                   disabled
                   id="customer_code"
                   className="w-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-gray-500"
-                  value={editedCustomer.customer_code}
+                  value={editedCustomer.customer_code || ""}
                 />
               </div>
               <div className="mb-4">
@@ -278,7 +274,7 @@ export default function CustUserAdmin() {
                   type="text"
                   id="name"
                   className="w-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-gray-500"
-                  value={editedCustomer.name}
+                  value={editedCustomer.name || ""}
                   onChange={(e) =>
                     setEditedCustomer({
                       ...editedCustomer,
@@ -303,7 +299,7 @@ export default function CustUserAdmin() {
                       type="password"
                       id="password"
                       className="w-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-gray-500"
-                      value={editedCustomer.password}
+                      value={editedCustomer.password || ""}
                       onChange={(e) =>
                         setEditedCustomer({
                           ...editedCustomer,
@@ -347,7 +343,7 @@ export default function CustUserAdmin() {
                   api
                     .put(`/user/auth/update-user/${editedUser.id}`, editedUser)
                     .then(async (res) => {
-                      alert(res.msg);
+                      alert(res.message);
                       window.location.href = "/admin/customer-user";
                     })
                     .catch((e) => {
@@ -357,7 +353,7 @@ export default function CustUserAdmin() {
                   api
                     .post("/user/auth/register-admin", editedUser)
                     .then(async (res) => {
-                      alert(res.msg);
+                      alert(res.message);
                       window.location.href = "/admin/customer-user";
                     })
                     .catch((e) => {
@@ -375,7 +371,7 @@ export default function CustUserAdmin() {
                   type="text"
                   id="first_name"
                   className="w-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-gray-500"
-                  value={editedUser.name}
+                  value={editedUser.name || ""}
                   onChange={(e) =>
                     setEditedUser({
                       ...editedUser,
@@ -393,7 +389,7 @@ export default function CustUserAdmin() {
                   type="text"
                   id="username"
                   className="w-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-gray-500"
-                  value={editedUser.username}
+                  value={editedUser.username || ""}
                   onChange={(e) =>
                     setEditedUser({
                       ...editedUser,
@@ -414,7 +410,7 @@ export default function CustUserAdmin() {
                       type="password"
                       id="password"
                       className="w-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-gray-500"
-                      value={editedUser.password}
+                      value={editedUser.password || ""}
                       onChange={(e) =>
                         setEditedUser({
                           ...editedUser,

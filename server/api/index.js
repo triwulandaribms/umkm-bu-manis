@@ -7,13 +7,13 @@ const { sequelize } = require("./config/db.js");
 
 require("./models/Relasi.js");
 
+const path = require("path");
 
 const UserAuthRoute = require("./routes/user/user-auth-route.js");
 const UserRoute = require("./routes/user/user-route.js");
 
 const CustomerAuthRoute = require("./routes/customer/customer-auth-route.js");
 const CustomerRoute = require("./routes/customer/customer-route.js");
-
 const app = express();
 
 app.use(cors({
@@ -27,6 +27,11 @@ app.use(cookieParser());
 
 const router = express.Router();
 app.use("/api", router);
+
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
 
 router.use("/user/auth",UserAuthRoute);
 router.use("/user", UserRoute);

@@ -14,12 +14,12 @@ export default function Admin() {
   const [bestCustomers, setBestCustomers] = useState([]);
   const [salesReport, setSalesReport] = useState([]);
   const [cashier, setCashier] = useState([]);
-  const [user, setUser] = useState();
-  const [customer, setCustomer] = useState();
+  const [user, setUser] = useState([]);
+  const [customer, setCustomer] = useState([]);
   const [loading, setLoading] = useState(true);
   const [popUp, setPopUp] = useState(false);
   const [popUp2, setPopUp2] = useState(false);
-  const [editedProduct, setEditedProduct] = useState();
+  const [editedProduct, setEditedProduct] = useState({});
   const [editedUser, setEditedUser] = useState();
   const [editedCustomer, setEditedCustomer] = useState();
 
@@ -34,7 +34,7 @@ export default function Admin() {
       api.get("/user/get-all-cashier").then((res) => setCashier(res));
       setLoading(false);
     }, 500);
-  }, [products?.id]);
+  }, []);
 
   if (
     localStorage.getItem("role") == "Super Admin" ||

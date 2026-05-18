@@ -1,12 +1,21 @@
 async function send(endpoint, method, body, header = "application/json") {
+
+    const isFormData = body instanceof FormData;
+
     const response = await fetch(`http://localhost:3000/api${endpoint}`, {
       method,
       credentials: "include",
-      headers: {
-        "Content-Type": header,
-      },
-      body: JSON.stringify(body),
-    });
+      headers: isFormData ? {} 
+                : {
+                  "Content-Type": header,
+                },
+                body: isFormData 
+                  ? body
+                  : body
+                  ? JSON.stringify(body)
+                  : undefined,
+                }
+      );
     const data = await (method === "GET" ? response.json() : response.json());
     return data;
   }

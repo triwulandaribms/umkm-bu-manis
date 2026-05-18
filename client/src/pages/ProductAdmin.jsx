@@ -48,8 +48,8 @@ export default function ProductAdmin() {
                 {p.name}
               </td>
               <td className="border-2 border-teal px-4 py-2 text-center">
-                {p.description.slice(0, 25)}
-                {p.description.length > 25 && "..."}
+                {p.description?.slice(0, 25) || "-"}
+                {p.description?.length > 25 && "..."}
               </td>
               <td className="border-2 border-teal px-4 py-2 text-center">
                 Rp{parseInt(p.price).toLocaleString("id-ID")}
@@ -58,7 +58,11 @@ export default function ProductAdmin() {
                 {p.stock}
               </td>
               <td className="border-2 border-teal px-4 py-2 text-center">
-                {p.image}
+                <img
+                  src={`http://localhost:3000/uploads/${p.image}`}
+                  alt={p.name}
+                  className="w-20 h-20 object-cover mx-auto rounded"
+                />
               </td>
               <td className="border border-teal px-4 py-2 flex justify-evenly">
                 <button
@@ -103,11 +107,29 @@ export default function ProductAdmin() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+
+                const formData = new FormData();
+
+                formData.append("name", editedProduct.name || "");
+                formData.append(
+                  "description",
+                  editedProduct.description || ""
+                );
+                formData.append("price", editedProduct.price || "");
+                formData.append("stock", editedProduct.stock || "");
+
+                if (editedProduct.image instanceof File) {
+                  formData.append("image", editedProduct.image);
+                }
+
                 if (editedProduct.id) {
                   api
-                    .put(`/user/update-product-by/${editedProduct.id}`, editedProduct)
-                    .then(async (res) => {
-                      alert(res.msg);
+                    .put(
+                      `/user/update-product-by/${editedProduct.id}`,
+                      formData
+                    )
+                    .then((res) => {
+                      alert(res.message);
                       window.location.href = "/admin/product";
                     })
                     .catch((e) => {
@@ -115,18 +137,20 @@ export default function ProductAdmin() {
                     });
                 } else {
                   api
-                    .post("/user/add-product", editedProduct)
-                    .then(async (res) => {
-                      alert(res.msg);
+                    .post("/user/add-product", formData)
+                    .then((res) => {
+                      alert(res.message);
                       window.location.href = "/admin/product";
                     })
                     .catch((e) => {
                       console.log(e);
                     });
                 }
-                setPopUp(!popUp);
+
+                setPopUp(false);
               }}
             >
+
               <div className="mb-4">
                 <label
                   htmlFor="name"
@@ -138,7 +162,7 @@ export default function ProductAdmin() {
                   type="text"
                   id="name"
                   className="w-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-gray-500"
-                  value={editedProduct.name}
+                  value={editedProduct?.name || ""}
                   onChange={(e) =>
                     setEditedProduct({
                       ...editedProduct,
@@ -148,6 +172,7 @@ export default function ProductAdmin() {
                   autoFocus
                 />
               </div>
+
               <div className="mb-4">
                 <label
                   htmlFor="description"
@@ -159,7 +184,7 @@ export default function ProductAdmin() {
                   type="text"
                   id="description"
                   className="w-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-gray-500"
-                  value={editedProduct.description}
+                  value={editedProduct?.description || ""}
                   onChange={(e) =>
                     setEditedProduct({
                       ...editedProduct,
@@ -168,6 +193,7 @@ export default function ProductAdmin() {
                   }
                 />
               </div>
+
               <div className="mb-4">
                 <label
                   htmlFor="price"
@@ -179,7 +205,7 @@ export default function ProductAdmin() {
                   type="number"
                   id="price"
                   className="w-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-gray-500"
-                  value={editedProduct.price}
+                  value={editedProduct?.price || ""}
                   onChange={(e) =>
                     setEditedProduct({
                       ...editedProduct,
@@ -188,6 +214,7 @@ export default function ProductAdmin() {
                   }
                 />
               </div>
+
               <div className="mb-4">
                 <label
                   htmlFor="stock"
@@ -199,7 +226,7 @@ export default function ProductAdmin() {
                   type="number"
                   id="stock"
                   className="w-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-gray-500"
-                  value={editedProduct.stock}
+                  value={editedProduct?.stock || ""}
                   onChange={(e) =>
                     setEditedProduct({
                       ...editedProduct,
@@ -208,6 +235,7 @@ export default function ProductAdmin() {
                   }
                 />
               </div>
+
               <div className="mb-4">
                 <label
                   htmlFor="image"
@@ -216,18 +244,23 @@ export default function ProductAdmin() {
                   Gambar
                 </label>
                 <input
-                  type="text"
+                  type="file"
                   id="image"
-                  className="w-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-gray-500"
-                  value={editedProduct.image}
-                  onChange={(e) =>
-                    setEditedProduct({
-                      ...editedProduct,
-                      image: e.target.value,
-                    })
-                  }
+                  accept="image/*"
+                  className="w-full border border-gray-300 px-2 py-2 rounded focus:outline-none focus:border-blue-500"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+
+                    if (file) {
+                      setEditedProduct({
+                        ...editedProduct,
+                        image: file,
+                      });
+                    }
+                  }}
                 />
               </div>
+
               <div className="flex justify-end">
                 <button
                   type="button"

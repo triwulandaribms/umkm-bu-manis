@@ -13,9 +13,7 @@ const Product  = require("../../models/Product");
       });
     }
 
-    res.status(200).json({
-      data: dataProduct
-    });
+    res.status(200).json(dataProduct);
 
   } catch (error) {
     console.error("Gagal menampilkan:", error.message);
@@ -49,15 +47,15 @@ const Product  = require("../../models/Product");
   }
 };
 
- exports.addProduct = async (req, res) => {
-
+exports.addProduct = async (req, res) => {
   try {
+    const { name, description, price, stock } = req.body;
 
-    const {name, description, price, stock, image} = req.body;
+    const image = req.file?.filename;
 
-    if(!name || !description || !price || !stock || !image){
-      return res.status(404).json({
-        message: "data tidak boleh ada yang kosong"
+    if (!name || !description || !price || !stock || !image) {
+      return res.status(400).json({
+        message: "Data tidak boleh kosong",
       });
     }
 
@@ -66,48 +64,63 @@ const Product  = require("../../models/Product");
       description,
       price,
       stock,
-      image
+      image,
     });
 
-    res.status(201).json({ 
-      message: "Data produk berhasil ditambahkan" 
+    res.status(201).json({
+      message: "Data produk berhasil ditambahkan",
     });
-
   } catch (error) {
     console.error("Gagal:", error.message);
-    res.status(500).json({ message: "Terjadi kesalahan server" });
+
+    res.status(500).json({
+      message: "Terjadi kesalahan server",
+    });
   }
 };
 
- exports.updateProduct = async (req, res) => {
-
+exports.updateProduct = async (req, res) => {
   try {
-
     const { id } = req.params;
-    const { name, description, price, stock, image } = req.body;
 
-    if(!name || !description || !price || !stock || !image){
+    const { name, description, price, stock } = req.body;
+
+    const product = await Product.findByPk(id);
+
+    if (!product) {
       return res.status(404).json({
-        message: "data tidak boleh ada yang kosong"
-      }); 
+        message: "Produk tidak ditemukan",
+      });
     }
 
-    await Product.update({
-      name,
-      description,
-      price,
-      stock,
-      image
-    }, { where : { id } 
-  });
+    let image = product.image;
 
-    res.status(201).json({
-      message: "berhasil update"
+    if (req.file) {
+      image = req.file.filename;
+    }
+
+    await Product.update(
+      {
+        name,
+        description,
+        price,
+        stock,
+        image,
+      },
+      {
+        where: { id },
+      }
+    );
+
+    res.status(200).json({
+      message: "Berhasil update produk",
     });
-    
   } catch (error) {
     console.error("Gagal:", error.message);
-    res.status(500).json({ message: "Terjadi kesalahan server" });
+
+    res.status(500).json({
+      message: "Terjadi kesalahan server",
+    });
   }
 };
 

@@ -30,11 +30,13 @@ const {
 
 const router = express.Router();
 
+const upload = require("../../middleware/upload.js");
+
 // route untuk produk
 router.get("/get-all-product", getAllProduct);
 router.get("/get-product-by/:id", getProductById);
-router.post("/add-product", addProduct);
-router.put("/update-product-by/:id", updateProduct);
+router.post("/add-product",upload.single("image"), addProduct);
+router.put("/update-product-by/:id", upload.single("image"),updateProduct);
 router.delete("/delete-product-by/:id", deleteProduct);
 
 // route untuk aktivitas penjualan

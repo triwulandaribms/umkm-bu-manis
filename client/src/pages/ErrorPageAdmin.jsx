@@ -8,7 +8,7 @@ export default function ErrorPageAdmin() {
         Maaf, halaman yang Anda cari tidak ditemukan.
       </p>
       <Link
-        to={localStorage.getItem("role") === "admin" ? "/admin" : "/"}
+        to={localStorage.getItem("role") === "Admin" ? "/admin" : "/"}
         className="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
       >
         Kembali ke Beranda
