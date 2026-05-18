@@ -30,6 +30,6 @@
 	- customer dapat melihat produk yag tersedia 
 	- customer dapat melakukan pembelian produk
 
-# ERD
+<h1>ERD</h1>
 
-<img width="1070" height="531" alt="image" src="https://github.com/user-attachments/assets/081b285d-ad31-43fe-8973-48190c24ff49" />
+<img src="./assets/foto%20erd.png" alt="ERD" width="700"/>
