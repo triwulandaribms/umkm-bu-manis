@@ -36,9 +36,7 @@ const Product  = require("../../models/Product");
       });
     }
 
-    res.status(200).json({
-      message: dataProduct    
-    });
+    res.status(200).json(dataProduct);
 
 
   } catch (error) {
@@ -143,3 +141,35 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
+exports.updateStockProduct = async (req, res) => {
+  try {
+
+    const { id } = req.params;
+    const { stock } = req.body;
+
+    const product = await Product.findByPk(id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product tidak ditemukan"
+      });
+    }
+
+    await product.update({
+      stock
+    });
+
+    return res.status(200).json({
+      message: "Stock berhasil diupdate",
+      data: product
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Terjadi kesalahan server"
+    });
+  }
+};

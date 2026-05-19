@@ -5,6 +5,7 @@ const {
   getAllProduct,
   getProductById,
   updateProduct,
+  updateStockProduct,
 } = require("../../controllers/product/ProductController.js");
 
 const {
@@ -21,6 +22,7 @@ const {
     deleteAllProductCashier,
     deleteProductCashier,
     getAllProductCashier,
+    updateCashier
 } = require( "../../controllers/cashier/CashierController.js");
 
 const {
@@ -37,6 +39,7 @@ router.get("/get-all-product", getAllProduct);
 router.get("/get-product-by/:id", getProductById);
 router.post("/add-product",upload.single("image"), addProduct);
 router.put("/update-product-by/:id", upload.single("image"),updateProduct);
+router.put("/update-stock-by/:id", updateStockProduct)
 router.delete("/delete-product-by/:id", deleteProduct);
 
 // route untuk aktivitas penjualan
@@ -50,6 +53,7 @@ router.get("/get-sale-by/:id", getSaleByIdCustomer);
 // route untuk aktivitas kasir
 router.get("/get-all-cashier", getAllProductCashier);
 router.post("/add-cashier", addCashierProduct);
+router.put("/update-cashier/:id", updateCashier);
 router.delete("/delete/:id", deleteProductCashier);
 router.delete("/delete-all", deleteAllProductCashier);
 

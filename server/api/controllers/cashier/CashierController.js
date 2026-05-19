@@ -5,7 +5,7 @@ exports.addCashierProduct = async (req, res) => {
     
   try {
     
-    const { id_product, total_product, price } = req.body;
+    const { id_product, total_product, price} = req.body;
     
     const sub_total = total_product * price;
 
@@ -13,7 +13,7 @@ exports.addCashierProduct = async (req, res) => {
       id_product,
       total_product,
       price,
-      sub_total
+      sub_total,
     })
     
     res.status(201).json({ msg: "Sukses", data: result});
@@ -25,11 +25,44 @@ exports.addCashierProduct = async (req, res) => {
   }
 };
 
+exports.updateCashier = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { total_product, sub_total } = req.body;
+
+    const cashier = await CashierProduct.update(
+      {
+        total_product,
+        sub_total,
+      },
+      {
+        where: {
+          id,
+        },
+      }
+    );
+
+    return res.status(200).json({
+      message: "Cashier updated",
+      data: cashier,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 exports.getAllProductCashier = async (_req, res) => {
   try {
     const result = await CashierProduct.findAll({
+      where: {
+        deletedAt: null
+      },
+    
       attributes: ['id', 'total_product', 'id_product', 'price', 'sub_total'],
-      inlcude:[
+    
+      include: [
         {
           model: Product,
           attributes: ['name']
@@ -45,31 +78,70 @@ exports.getAllProductCashier = async (_req, res) => {
 
 exports.deleteProductCashier = async (req, res) => {
   try {
+
     const { id } = req.params;
 
-    await CashierProduct.findOne({
-      where: {id}
-    })
-    res.status(201).json({
-      message: `Data kasir dengan id  ${id} sudah terhapus`    
+    if (!id) {
+      return res.status(400).json({
+        message: "ID harus diisi."
+      });
+    }
+
+    const resultData = await CashierProduct.findOne({
+      where: {
+        id,
+        deletedAt: null
+      }
     });
+
+    if (!resultData) {
+      return res.status(404).json({
+        message: "Data kasir tidak ditemukan"
+      });
+    }
+
+    await resultData.update({
+      deletedAt: new Date()
+    });
+
+    return res.status(200).json({
+      message: `Data kasir dengan id ${id} berhasil dihapus`
+    });
+
   } catch (error) {
+
     console.error("Gagal:", error.message);
-    res.status(500).json({ message: "Terjadi kesalahan server" });
+
+    return res.status(500).json({
+      message: "Terjadi kesalahan server"
+    });
   }
 };
 
 exports.deleteAllProductCashier = async (req, res) => {
   try {
 
-    await CashierProduct.findAll();
-    res.status(201).json({
-      message: `sukses data kasir dihapus`    
+    await CashierProduct.update(
+      {
+        deletedAt: new Date()
+      },
+      {
+        where: {
+          deletedAt: null
+        }
+      }
+    );
+
+    return res.status(200).json({
+      message: "Sukses data kasir dihapus"
     });
 
   } catch (error) {
+
     console.error("Gagal:", error.message);
-    res.status(500).json({ message: "Terjadi kesalahan server"});
+
+    return res.status(500).json({
+      message: "Terjadi kesalahan server"
+    });
   }
 };
-

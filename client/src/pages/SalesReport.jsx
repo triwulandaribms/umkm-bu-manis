@@ -3,10 +3,12 @@ import { AdminContext } from "./Admin";
 import * as XLSX from "xlsx";
 
 export default function SalesReport() {
+
   const { salesReport } = useContext(AdminContext);
-  // const [subTotal, setSubtotal] = useState(0);
-  // const [dikson, setDiskon] = useState(0);
-  // const [totalSale, setTotalSale] = useState(0);
+
+  const reportData = Array.isArray(salesReport)
+    ? salesReport
+    : [];
 
   const [currentDate, setCurrentDate] = useState("");
   useEffect(() => {
@@ -32,16 +34,15 @@ export default function SalesReport() {
   };
 
   const calculateSubTotal = () =>
-    salesReport.reduce((acc, curr) => acc + parseInt(curr.sub_total), 0);
+    reportData.reduce((acc, curr) => acc + parseInt(curr.sub_total), 0);
 
   const calculateTotalSale = () =>
-    salesReport.reduce((acc, curr) => acc + parseInt(curr.total_sale), 0);
+    reportData.reduce((acc, curr) => acc + parseInt(curr.total_sale), 0);
 
   const calculateDiscount = () =>
-    salesReport.reduce((acc, curr) => acc + parseInt(curr.discount), 0);
+    reportData.reduce((acc, curr) => acc + parseInt(curr.discount), 0);
 
   const generateExcel = () => {
-    // Definisikan header untuk laporan penjualan
     const header = [
       [
         "Tanggal",
@@ -53,7 +54,6 @@ export default function SalesReport() {
       ],
     ];
 
-    // Siapkan data untuk laporan penjualan
     const body = salesReport.map((s) => [
       formatDate(s.sale_date),
       s.customer_code,
@@ -63,14 +63,12 @@ export default function SalesReport() {
       s.type_of_payment,
     ]);
 
-    // Gabungkan header dan body
     const data = [
       ...header,
       ...body,
       ["Created " + new Date().toLocaleString()],
     ];
 
-    // Buat worksheet dari data yang sudah digabungkan
     const worksheet = XLSX.utils.aoa_to_sheet(data);
 
     const wscols = [
@@ -83,7 +81,6 @@ export default function SalesReport() {
     ];
     worksheet["!cols"] = wscols;
 
-    // Format cell untuk header dan data
     const headerCellStyle = {
       font: { bold: true },
       alignment: { horizontal: "center", vertical: "center" },
@@ -96,18 +93,15 @@ export default function SalesReport() {
       alignment: { horizontal: "center", vertical: "center" },
     };
 
-    // Terapkan gaya ke header
     for (let col = 0; col < header[0].length; col++) {
       const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
       worksheet[cellAddress].s = headerCellStyle;
     }
 
-    // Terapkan gaya ke body
     for (let row = 1; row <= body.length; row++) {
       for (let col = 0; col < body[0].length; col++) {
         const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
         if (col == 3) {
-          // Kolom harga
           worksheet[cellAddress].s = currencyCellStyle;
         } else {
           worksheet[cellAddress].s = centerCellStyle;
@@ -115,59 +109,11 @@ export default function SalesReport() {
       }
     }
 
-    // Buat workbook dan tambahkan worksheet ke dalamnya
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sales Data");
 
-    // Simpan file Excel
     XLSX.writeFile(workbook, "laporan-penjualan.xlsx");
   };
-
-  // const generateExcel = () => {
-  //   // Buat worksheet dari data penjualan
-  //   const worksheet = XLSX.utils.json_to_sheet(salesReport);
-
-  //   // Tambahkan header yang lebih rapi
-  //   XLSX.utils.sheet_add_aoa(
-  //     worksheet,
-  //     [
-  // [
-  //   "Tanggal",
-  //   "Kode Konsumen",
-  //   "Sub Total",
-  //   "Diskon",
-  //   "Total Penjualan",
-  //   "Jenis Pembayaran",
-  // ],
-  //     ],
-  //     { origin: "A1" }
-  //   );
-
-  //   // Buat workbook dan tambahkan worksheet ke workbook
-  //   const workbook = XLSX.utils.book_new();
-  //   XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan Penjualan");
-
-  //   // Atur lebar kolom untuk memastikan tata letak yang rapi
-  // const wscols = [
-  //   { wch: 30 },
-  //   { wch: 20 },
-  //   { wch: 20 },
-  //   { wch: 20 },
-  //   { wch: 20 },
-  //   { wch: 20 },
-  // ];
-  // worksheet["!cols"] = wscols;
-
-  //   // Tambahkan timestamp di akhir file
-  //   XLSX.utils.sheet_add_aoa(
-  //     worksheet,
-  //     [["Created " + new Date().toLocaleString()]],
-  //     { origin: -1 }
-  //   );
-
-  //   // Simpan file Excel
-  //   XLSX.writeFile(workbook, "laporan-penjualan.xlsx");
-  // };
 
   return (
     <div id="laporan-penjualan" className="py-5 px-5 bg-warm-gray text-teal">
@@ -206,7 +152,7 @@ export default function SalesReport() {
             </thead>
             <tbody>
               {/* Data rows */}
-              {salesReport?.map((s, index) => (
+              { reportData.map((s, index) => (
                 <tr key={s.id}>
                   <td className="border-[1px] border-teal px-4 py-2 text-center">
                     {index + 1}

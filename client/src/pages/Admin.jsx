@@ -9,7 +9,7 @@ import { api } from "../utils.js";
 export const AdminContext = createContext();
 
 export default function Admin() {
-  const [products, setProducts] = useState();
+  const [products, setProducts] = useState([]);
   const [bestProducts, setBestProducts] = useState([]);
   const [bestCustomers, setBestCustomers] = useState([]);
   const [salesReport, setSalesReport] = useState([]);
@@ -25,7 +25,11 @@ export default function Admin() {
 
   useEffect(() => {
     setTimeout(() => {
-      api.get("/user/get-all-product").then((res) => setProducts(res));
+      // api.get("/user/get-all-product").then((res) => setProducts(res));
+      api.get("/user/get-all-product").then((res) => {
+        console.log(res);
+        setProducts(Array.isArray(res) ? res : []);
+      });
       api.get("/user/auth/get-all-user").then((res) => setUser(res));
       api.get("/user/auth/get-all-customer").then((res) => setCustomer(res));
       api.get("/user/get-sales-report").then((res) => setSalesReport(res));

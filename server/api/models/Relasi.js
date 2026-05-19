@@ -52,7 +52,6 @@ Product.hasMany(CashierProduct, {
 });
 
 
-
 CodeVoucher.belongsTo(Customer, {
   foreignKey: "id_customer",
 });

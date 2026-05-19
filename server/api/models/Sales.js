@@ -29,6 +29,10 @@ const salesModel = sequelize.define(
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    sub_total: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     discount: {
         type: DataTypes.INTEGER,
         allowNull: false

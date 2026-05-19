@@ -104,7 +104,7 @@ export default function CustUserAdmin() {
                             api
                               .delete(`/user/auth/delete-user/${u.id}`)
                               .then(async (res) => {
-                                alert(res.msg);
+                                alert(res.message);
                               })
                               .catch((e) => {
                                 console.log(e);

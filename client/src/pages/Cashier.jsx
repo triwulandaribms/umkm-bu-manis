@@ -23,22 +23,23 @@ export default function Cashier() {
       address: "-",
     });
   }, [cashier]);
-
   return (
     <div className="bg-warm-gray flex text-teal">
       <div className="w-2/3">
         <div className="grid grid-cols-3 gap-5 px-4 py-4">
-          {products
-            ?.filter((p) => p.stock >= 1)
-            .map((p) => (
-              <CashierCardProduct
-                key={p.id}
-                id={p.id}
-                name={p.name}
-                image={p.image}
-                price={p.price}
-              />
-            ))}
+          {Array.isArray(products) &&
+            products
+              .filter((p) => p.stock >= 1)
+              .map((p) => (
+                <CashierCardProduct
+                  key={p.id}
+                  id={p.id}
+                  name={p.name}
+                  image={p.image}
+                  price={p.price}
+                  stock={p.stock}
+                />
+              ))}
         </div>
       </div>
       <div className="w-1/3 m-5 border-2 border-teal flex flex-col justify-between">
@@ -59,9 +60,10 @@ export default function Cashier() {
               <CashierCheckoutProduct
                 key={c.id}
                 id={c.id}
-                name={c.name}
+                name={c.product?.name}
                 price={c.price}
-              />
+                qty={c.total_product}
+            />
             ))}
           </div>
         </div>
@@ -113,8 +115,8 @@ export default function Cashier() {
                 });
                 api
                   .post("/user/add-sale", saleCustomer)
-                  .then((res) => alert(res.msg));
-                api.delete("/cashier/delete-all");
+                  .then((res) => alert(res.message));
+                api.delete("/user/delete-all");
                 setSaleCustomer({});
                 setPopUp(!popUp);
                 window.location.reload();

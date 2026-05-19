@@ -1,22 +1,42 @@
 import { FaRegTrashAlt } from "react-icons/fa";
 import { api } from "../utils";
-export default function CashierCheckoutProduct({ id, name, price }) {
+
+export default function CashierCheckoutProduct({
+  id,
+  name,
+  price,
+  qty,
+}) {
+
+  const totalPrice = parseInt(price) * parseInt(qty);
+
   return (
-    <div className="flex justify-between py-1 px-2">
-      <div className="flex items-center gap-3 w-full">
+    <div className="flex justify-between items-center py-2 px-3 border-b">
+      
+      <div className="flex items-start gap-3">
         <FaRegTrashAlt
-          className="cursor-pointer"
+          className="cursor-pointer mt-1 text-red-500"
           onClick={() => {
-            api.delete(`/cashier/delete/${id}`).then(() => {
+            api.delete(`/user/delete/${id}`).then(() => {
               window.location.reload();
             });
           }}
         />
-        <p className="text-sm">{name}</p>
+
+        <div className="flex flex-col">
+          <p className="font-semibold text-sm">
+            {name}
+          </p>
+
+          <p className="text-xs text-gray-500">
+            {qty} x Rp{parseInt(price).toLocaleString("id-ID")}
+          </p>
+        </div>
       </div>
-      <div className="w-full">
-        <p className="text-sm text-center">
-          Rp{parseInt(price).toLocaleString("id-ID")}
+
+      <div>
+        <p className="font-bold text-sm">
+          Rp{totalPrice.toLocaleString("id-ID")}
         </p>
       </div>
     </div>

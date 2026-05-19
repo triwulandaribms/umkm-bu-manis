@@ -89,31 +89,46 @@ exports.addSalesCustomer = async (req, res) => {
 exports.getSalesReport = async (_req, res) => {
 
   try {
-    
+
     const sales = await Sales.findAll({
       attributes: [
         "id",
-        "total_product",
+        "sub_total",
         "discount",
         "total_sale",
         "type_of_payment",
         "createdAt"
       ],
-      include: [{
-        model: Customer,
-        as: "customer",
-        attributes: ["customer_code"]
-      }]
+
+      include: [
+        {
+          model: Customer,
+          as: "customer",
+          attributes: ["customer_code"]
+        }
+      ],
+
+      order: [["createdAt", "DESC"]]
     });
 
-    res.status(200).json(sales);
+    const formattedSales = sales.map((sale) => ({
+      id: sale.id,
+      sale_date: sale.createdAt,
+      customer_code: sale.customer?.customer_code,
+      sub_total: sale.sub_total,
+      discount: sale.discount,
+      total_sale: sale.total_sale,
+      type_of_payment: sale.type_of_payment
+    }));
+
+    return res.status(200).json(formattedSales);
 
   } catch (error) {
+
     console.log(error);
 
-    res.status(500).json({
-      message: error.message,
-      stack: error.stack
+    return res.status(500).json({
+      message: error.message
     });
   }
 };
