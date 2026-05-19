@@ -55,12 +55,25 @@ export default function Login() {
       
         const payload = jwtDecode(token);
       
+        setUser(payload);
+        
         localStorage.setItem("id", payload.id);
         localStorage.setItem("customer_code",payload.customer_code);
         localStorage.setItem("name", payload.name);
       
         window.location.href = "/";
-      
+       
+        
+        console.log("RES LOGIN:", res);
+        
+        
+        console.log("TOKEN:", token);
+        
+        
+        
+        console.log("PAYLOAD:", payload);
+        
+        
 
       } else {
 

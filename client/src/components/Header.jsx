@@ -40,7 +40,7 @@ export default function Header() {
         </nav>
         <div className="flex justify-evenly  w-1/6">
           <Link to="/cart" className="text-white hover:text-gray-200 relative">
-            {cart.length < 1 ? (
+            {cart?.length < 1 ? (
               ""
             ) : (
               <div className="absolute -right-2 -top-2 text-teal px-[5px] bg-white rounded-full text-xs font-semibold">

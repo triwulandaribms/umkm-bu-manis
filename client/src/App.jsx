@@ -22,27 +22,31 @@ function App() {
 
     api
       .get("/customer/get-all-product")
-      .then((response) => setProducts(response.data));
+      .then((response) => setProducts(response|| []))
+      .catch((err) => console.log(err));
   
     const id = localStorage.getItem("id");
   
-    if (id) {
+    if (id && id !== "undefined") {
   
       api
         .get(`/customer/get-cart-by/${id}`)
-        .then((response) => setCart(response.data));
+        .then((response) => setCart(response || []))
+        .catch(() => setCart([]));
   
       api
         .get(`/customer/get-voucher-by/${id}`)
-        .then((response) => setCodeVouchers(response.data));
+        .then((response) => setCodeVouchers(response || []))
+        .catch(() => setCodeVouchers([]));
   
       api
         .get(`/customer/get-sale-by/${id}`)
-        .then((response) => setSales(response.data));
-  
+        .then((response) => setSales(response || []))
+        .catch(() => setSales([]));
     }
   
   }, [user?.id]);
+  
   return (
     <AllContext.Provider
       value={{

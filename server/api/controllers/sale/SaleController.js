@@ -87,17 +87,32 @@ exports.addSalesCustomer = async (req, res) => {
 };
 
 exports.getSalesReport = async (_req, res) => {
-
   try {
 
     const sales = await Sales.findAll({
       attributes: [
-        "id",
-        "sub_total",
-        "discount",
-        "total_sale",
+        "id_customer",
         "type_of_payment",
-        "createdAt"
+
+        [
+          sequelize.fn("MAX", sequelize.col("sub_total")),
+          "sub_total"
+        ],
+
+        [
+          sequelize.fn("MAX", sequelize.col("discount")),
+          "discount"
+        ],
+
+        [
+          sequelize.fn("MAX", sequelize.col("total_sale")),
+          "total_sale"
+        ],
+
+        [
+          sequelize.fn("MAX", sequelize.col("sales.createdAt")),
+          "sale_date"
+        ]
       ],
 
       include: [
@@ -108,16 +123,23 @@ exports.getSalesReport = async (_req, res) => {
         }
       ],
 
-      order: [["createdAt", "DESC"]]
+      group: [
+        "id_customer",
+        "type_of_payment",
+        "customer.id"
+      ],
+
+      order: [
+        [sequelize.literal("sale_date"), "DESC"]
+      ]
     });
 
     const formattedSales = sales.map((sale) => ({
-      id: sale.id,
-      sale_date: sale.createdAt,
+      sale_date: sale.dataValues.sale_date,
       customer_code: sale.customer?.customer_code,
-      sub_total: sale.sub_total,
-      discount: sale.discount,
-      total_sale: sale.total_sale,
+      sub_total: sale.dataValues.sub_total,
+      discount: sale.dataValues.discount,
+      total_sale: sale.dataValues.total_sale,
       type_of_payment: sale.type_of_payment
     }));
 
@@ -132,7 +154,6 @@ exports.getSalesReport = async (_req, res) => {
     });
   }
 };
-
 exports.getBestProduct = async (_req, res) => {
 
   try {

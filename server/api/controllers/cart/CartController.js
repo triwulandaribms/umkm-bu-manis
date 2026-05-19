@@ -48,32 +48,6 @@ exports.getCartByIdCustomer = async (req, res) => {
   }
 };
 
-// exports.getCartByIdCustomer = async (req, res) => {
-//   try {
-//     const { id_customer } = req.params;
-
-//     const dataCart = await Cart.findAll({
-//       where: { id_customer },
-//       include: [{
-//         model: Product,
-//         attributes: ["id", "name", "image", "price"]
-//       }]
-//     });
-
-//     if (dataCart.length === 0) {
-//       return res.status(404).json({
-//         message: "Keranjang kosong"
-//       });
-//     }
-
-//     res.status(200).json(dataCart);
-
-//   } catch (error) {
-//     res.status(500).json({
-//       message: error.message
-//     });
-//   }
-// };
 
 exports.addCart = async (req, res) => {
 

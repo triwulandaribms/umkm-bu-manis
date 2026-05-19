@@ -38,7 +38,7 @@ export default function Register() {
   
       alert(res.message);
   
-      window.location.href = "/";
+      window.location.href = "/login";
   
     } catch (error) {
   

@@ -41,7 +41,7 @@ exports.registerAccountCustomer = async (req, res) => {
     res.status(201).json({
       message: "Registrasi akun telah berhasil",
       data: {
-        id_customer: resultData.id_customer,
+        id: resultData.id,
         name: resultData.name,
         customer_code: resultData.customer_code
       }
