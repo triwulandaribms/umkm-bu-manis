@@ -9,12 +9,14 @@ export default function Cashier() {
   const { products, cashier } = useContext(AdminContext);
   const [popUp, setPopUp] = useState(false);
   const [saleCustomer, setSaleCustomer] = useState({});
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+
   const calculateSubTotal = () =>
     cashier.reduce((acc, curr) => acc + parseInt(curr.sub_total), 0);
 
   useEffect(() => {
     setSaleCustomer({
-      id_customer: 1,
+      id_customer: selectedCustomer?.id || 1,
       sales: cashier,
       sub_total: calculateSubTotal(),
       discount: 0,
@@ -22,7 +24,7 @@ export default function Cashier() {
       type_of_payment: "KASIR",
       address: "-",
     });
-  }, [cashier]);
+  }, [cashier, selectedCustomer]);
   return (
     <div className="bg-warm-gray flex text-teal">
       <div className="w-2/3">

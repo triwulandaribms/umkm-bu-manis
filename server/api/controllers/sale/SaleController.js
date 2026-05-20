@@ -1,8 +1,7 @@
 const { sequelize } = require("../../config/db");
-const { Op, fn, col, literal } = require("sequelize");
 const Sales = require("../../models/Sales");
 const Product = require("../../models/Product");
-const Customer = require("../../models/Customer");
+// const Customer = require("../../models/Customer");
 const Cart = require("../../models/Cart");
 const VoucherCode = require("../../models/CodeVoucher");
 
@@ -87,63 +86,50 @@ exports.addSalesCustomer = async (req, res) => {
 };
 
 exports.getSalesReport = async (_req, res) => {
+
   try {
 
-    const sales = await Sales.findAll({
-      attributes: [
-        "id_customer",
-        "type_of_payment",
+    const [sales] = await sequelize.query(
+      `
+        SELECT 
+          s.id_customer,
+          s.id_product,
+          p.name AS product_name,
+          p.price,
+          p.image,
+        CASE
+          WHEN s.id_customer = 1 THEN 'UMUM'
+          ELSE c.customer_code
+        END AS customer_code,
+        CASE
+          WHEN s.id_customer = 1 THEN 'UMUM'
+          ELSE 'MEMBER'
+        END AS customer_type,
+        s.type_of_payment,
+        DATE(s."createdAt") AS sale_day,
+        SUM(s.sub_total) AS sub_total,
+        SUM(s.discount) AS discount,
+        SUM(s.total_sale) AS total_sale,
+        MAX(s."createdAt") AS sale_date
+        FROM "sales" s
+              LEFT JOIN "customer" c
+                ON c.id = s.id_customer
+              LEFT JOIN "product" p
+                ON p.id = s.id_product  
+        GROUP BY
+          s.id_customer,
+            s.id_product,
+            p.name,
+            p.price,
+            p.image,
+            c.customer_code,
+            s.type_of_payment,
+            DATE(s."createdAt")
+        ORDER BY sale_date desc
+      `
+  );
 
-        [
-          sequelize.fn("MAX", sequelize.col("sub_total")),
-          "sub_total"
-        ],
-
-        [
-          sequelize.fn("MAX", sequelize.col("discount")),
-          "discount"
-        ],
-
-        [
-          sequelize.fn("MAX", sequelize.col("total_sale")),
-          "total_sale"
-        ],
-
-        [
-          sequelize.fn("MAX", sequelize.col("sales.createdAt")),
-          "sale_date"
-        ]
-      ],
-
-      include: [
-        {
-          model: Customer,
-          as: "customer",
-          attributes: ["customer_code"]
-        }
-      ],
-
-      group: [
-        "id_customer",
-        "type_of_payment",
-        "customer.id"
-      ],
-
-      order: [
-        [sequelize.literal("sale_date"), "DESC"]
-      ]
-    });
-
-    const formattedSales = sales.map((sale) => ({
-      sale_date: sale.dataValues.sale_date,
-      customer_code: sale.customer?.customer_code,
-      sub_total: sale.dataValues.sub_total,
-      discount: sale.dataValues.discount,
-      total_sale: sale.dataValues.total_sale,
-      type_of_payment: sale.type_of_payment
-    }));
-
-    return res.status(200).json(formattedSales);
+    return res.status(200).json(sales);
 
   } catch (error) {
 
@@ -152,54 +138,46 @@ exports.getSalesReport = async (_req, res) => {
     return res.status(500).json({
       message: error.message
     });
+
   }
 };
+
 exports.getBestProduct = async (_req, res) => {
 
   try {
-    const products = await Product.findAll({
-      subQuery: false,
-    
-      attributes: [
-        "id",
-        "name",
-        "price",
-        "image",
-        [
-          sequelize.fn(
-            "SUM",
-            sequelize.col("sales.total_product")
-          ),
-          "total_sales",
-        ],
-      ],
-    
-      include: [
-        {
-          model: Sales,
-          as: "sales",
-          attributes: [],
-        },
-      ],
-    
-      group: ["product.id"],
-    
-      order: [
-        [sequelize.literal("total_sales"), "DESC"]
-      ],
-    
-      limit: 3,
-    });
 
-    res.status(200).json(products);
+    const [products] = await sequelize.query(
+      `
+     SELECT
+        p.id,
+        p.name,
+        p.price,
+        p.image,
+        SUM(s.total_product) AS total_sales
+      FROM "product" p
+      LEFT JOIN "sales" s
+      ON s.id_product = p.id
+      GROUP BY
+              p.id,
+              p.name,
+              p.price,
+              p.image
+      ORDER BY total_sales DESC
+      LIMIT 3
+      `
+  );
+
+    return res.status(200).json(products);
 
   } catch (error) {
+
     console.log(error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
       stack: error.stack
     });
+
   }
 };
 
@@ -207,53 +185,40 @@ exports.getBestCustomer = async (_req, res) => {
 
   try {
 
-    const customers = await Customer.findAll({
-      subQuery: false,
-    
-      attributes: [
-        "id",
-        "name",
-        [
-          sequelize.fn(
-            "SUM",
-            sequelize.col("sales.total_product")
-          ),
-          "total_sales",
-        ],
-      ],
-    
-      include: [
-        {
-          model: Sales,
-          as: "sales",
-          attributes: [],
-        },
-      ],
-    
-      where: {
-        id: {
-          [Op.ne]: 1,
-        },
-      },
-    
-      group: ["customer.id"],
-    
-      order: [
-        [sequelize.literal("total_sales"), "DESC"]
-      ],
-    
-      limit: 3,
-    });
+    const [customers] = await sequelize.query(
+      `
+      SELECT
+        c.id,
+        c.name,
+        c.customer_code,
+        COALESCE(
+          SUM(s.total_product),
+          0
+        ) AS total_sales
+      FROM "customer" c
+      LEFT JOIN "sales" s
+      ON s.id_customer = c.id
+      WHERE c.id != 1
+      GROUP BY
+              c.id,
+              c.name,
+              c.customer_code
+      ORDER BY total_sales DESC
+      LIMIT 3
+      `
+    );
 
-    res.status(200).json(customers);
+    return res.status(200).json(customers);
 
   } catch (error) {
+
     console.log(error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
       stack: error.stack
     });
+
   }
 };
 
@@ -269,25 +234,39 @@ exports.getSaleByIdCustomer = async (req, res) => {
       });
     }
 
-    const sales = await Sales.findAll({
-      where: {
+    const [sales] = await sequelize.query(
+      `
+      SELECT
+          s.id,
+          s.total_product,
+          s.type_of_payment,
+          s.sub_total,
+          s.discount,
+          s.total_sale,
+          s."createdAt",
+          p.name,
+          p.image,
+          p.price
+      FROM "sales" s
+      LEFT JOIN "product" p
+      ON p.id = s.id_product
+      WHERE s.id_customer = :id_customer
+      ORDER BY s."createdAt" desc
+      `, {
+      replacements: {
         id_customer
-      },
-        attributes: [
-          "id",
-          "total_product",
-          "type_of_payment"
-        ],
-        include: [{
-          model: Product,
-          as: "product",
-          attributes: ["name", "image", "price"]
-        }]
-      });
+      }
+    });
 
-      res.status(200).json(sales);
+    return res.status(200).json(sales);
 
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
+  } catch (error) {
+
+    console.log(error);
+
+    return res.status(500).json({
+      message: error.message
+    });
+
+  }
 };

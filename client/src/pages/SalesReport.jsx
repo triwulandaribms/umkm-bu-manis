@@ -47,20 +47,22 @@ export default function SalesReport() {
       [
         "Tanggal",
         "Kode Konsumen",
+        "Jenis Pembayaran",
+        "Produk",
         "Sub Total",
         "Diskon",
         "Total Penjualan",
-        "Jenis Pembayaran",
       ],
     ];
 
     const body = salesReport.map((s) => [
       formatDate(s.sale_date),
       s.customer_code,
+      s.type_of_payment,
+      s.product_name,
       s.sub_total,
       s.discount,
       s.total_sale,
-      s.type_of_payment,
     ]);
 
     const data = [
@@ -140,6 +142,9 @@ export default function SalesReport() {
                   Tipe Pembayaran
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-center">
+                  Produk
+                </th>
+                <th className="border border-gray-300 px-4 py-2 text-center">
                   Sub Total
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-center">
@@ -152,7 +157,7 @@ export default function SalesReport() {
             </thead>
             <tbody>
               {/* Data rows */}
-              { reportData.map((s, index) => (
+              {reportData.map((s, index) => (
                 <tr key={s.id}>
                   <td className="border-[1px] border-teal px-4 py-2 text-center">
                     {index + 1}
@@ -165,6 +170,9 @@ export default function SalesReport() {
                   </td>
                   <td className="border-[1px] border-teal px-4 py-2 text-center">
                     {s.type_of_payment}
+                  </td>
+                  <td className="border-[1px] border-teal px-4 py-2 text-center">
+                    {s.product_name}
                   </td>
                   <td className="border-[1px] border-teal px-4 py-2 text-center">
                     Rp{parseInt(s.sub_total).toLocaleString("id-ID")}
@@ -181,7 +189,7 @@ export default function SalesReport() {
             <tfoot>
               <tr className="bg-gray-300 font-bold tracking-wider">
                 <td
-                  colSpan={4}
+                  colSpan={5}
                   className="border border-gray-300 px-4 py-2 text-center"
                 >
                   TOTAL

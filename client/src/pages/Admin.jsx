@@ -25,7 +25,6 @@ export default function Admin() {
 
   useEffect(() => {
     setTimeout(() => {
-      // api.get("/user/get-all-product").then((res) => setProducts(res));
       api.get("/user/get-all-product").then((res) => {
         console.log(res);
         setProducts(Array.isArray(res) ? res : []);
