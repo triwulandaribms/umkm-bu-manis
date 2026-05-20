@@ -4,6 +4,8 @@ import CashierCardProduct from "../components/CashierCardProduct";
 import CashierCheckoutProduct from "../components/CashierCheckoutProduct";
 import { FaCheckCircle } from "react-icons/fa";
 import { api } from "../utils";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default function Cashier() {
   const { products, cashier } = useContext(AdminContext);
@@ -25,6 +27,52 @@ export default function Cashier() {
       address: "-",
     });
   }, [cashier, selectedCustomer]);
+
+  const generateReceiptPDF = () => {
+
+    const doc = new jsPDF();
+  
+    doc.setFontSize(18);
+  
+    doc.text("STRUK PEMBELIAN", 70, 20);
+  
+    doc.setFontSize(12);
+  
+    doc.text(`Tanggal : ${new Date().toLocaleString("id-ID")}`, 14, 35);
+  
+    doc.text(`Customer : ${selectedCustomer?.name || "UMUM"}`, 14, 45);
+  
+    const tableColumn = [
+      "Produk",
+      "Qty",
+      "Harga",
+      "Subtotal"
+    ];
+  
+    const tableRows = cashier.map((item) => [
+      item.product?.name,
+      item.total_product,
+      `Rp${parseInt(item.price).toLocaleString("id-ID")}`,
+      `Rp${parseInt(item.sub_total).toLocaleString("id-ID")}`
+    ]);
+  
+    autoTable(doc, {
+      startY: 55,
+      head: [tableColumn],
+      body: tableRows,
+    });
+  
+    const finalY = doc.lastAutoTable.finalY + 10;
+  
+    doc.text(
+      `Total : Rp${parseInt(calculateSubTotal()).toLocaleString("id-ID")}`,
+      14,
+      finalY
+    );
+  
+    doc.save(`struk-${Date.now()}.pdf`);
+  };
+
   return (
     <div className="bg-warm-gray flex text-teal">
       <div className="w-2/3">
@@ -105,23 +153,40 @@ export default function Cashier() {
             <FaCheckCircle className="text-teal w-16 h-16" />
             <h1>Pesanan telah berhasil diselesaikan</h1>
             <button
-              onClick={() => {
-                setSaleCustomer({
-                  id_customer: 1,
-                  sales: cashier,
-                  sub_total: calculateSubTotal(),
-                  discount: 0,
-                  total_sale: calculateSubTotal(),
-                  type_of_payment: "KASIR",
-                  address: "-",
-                });
-                api
-                  .post("/user/add-sale", saleCustomer)
-                  .then((res) => alert(res.message));
-                api.delete("/user/delete-all");
-                setSaleCustomer({});
-                setPopUp(!popUp);
-                window.location.reload();
+              onClick={async () => {
+                try {
+              
+                  const payload = {
+                    id_customer: selectedCustomer?.id || 1,
+                    sales: cashier,
+                    sub_total: calculateSubTotal(),
+                    discount: 0,
+                    total_sale: calculateSubTotal(),
+                    type_of_payment: "KASIR",
+                    address: "-",
+                  };
+              
+                  const res = await api.post("/user/add-sale", payload);
+              
+                  generateReceiptPDF();
+              
+                  alert(res.message);
+              
+                  await api.delete("/user/delete-all");
+              
+                  setSaleCustomer({});
+              
+                  setPopUp(false);
+              
+                  window.location.reload();
+              
+                } catch (error) {
+              
+                  console.log(error);
+              
+                  alert(error.response?.data?.message || error.message);
+              
+                }
               }}
               className="bg-teal text-white py-2 w-full rounded-md"
             >
